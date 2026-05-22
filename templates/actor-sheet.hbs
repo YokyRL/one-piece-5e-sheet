@@ -1,0 +1,394 @@
+{{!-- One Piece 5e Pirate Log — Foundry v13 sheet template
+     Body markup taken verbatim from the original v29.html.
+     The original script is shipped as scripts/sheet-runtime.js and is
+     attached to this root element by the ActorSheet class. --}}
+<div class="opfvtt-sheet" data-actor-id="{{actor.id}}" data-opfvtt-root="1">
+<div class="app" id="app">
+<header class="header">
+<div class="title">
+<h1>One Piece 5e Pirate Log</h1>
+<p>Grand Line styled digital character sheet for Windows browsers. Offline, autosaving, and ready for your crew without extra installs.</p>
+</div>
+<div>
+<div class="actions">
+<button class="action-btn" id="saveBtn" title="Autosave is on; this forces an immediate save." type="button">Save now</button>
+<button class="action-btn" id="exportBtn" type="button">Export</button>
+<button class="action-btn" id="importBtn" type="button">Import</button>
+<button class="action-btn" id="printBtn" type="button">Print tab</button>
+<button class="danger-btn" id="clearBtn" type="button">Clear</button>
+</div>
+<div class="status" id="status">Autosave on.</div>
+</div>
+</header>
+<nav aria-label="Character form tabs" class="nav" role="tablist">
+<button aria-selected="true" class="tab-btn" data-tab="character" role="tab" type="button">Character</button>
+<button aria-selected="false" class="tab-btn" data-tab="profile" role="tab" type="button">Profile</button>
+<button aria-selected="false" class="tab-btn" data-tab="combat" role="tab" type="button">Combat</button>
+<button aria-selected="false" class="tab-btn" data-tab="abilities" role="tab" type="button">Abilities &amp; Skills</button>
+<button aria-selected="false" class="tab-btn" data-tab="features" role="tab" type="button">Features</button>
+<button aria-selected="false" class="tab-btn" data-tab="equipment" role="tab" type="button">Equipment</button>
+<button aria-selected="false" class="tab-btn" data-tab="story" role="tab" type="button">Story &amp; Notes</button>
+<button aria-selected="false" class="tab-btn" data-tab="config" role="tab" type="button">Config</button>
+</nav>
+<main class="main">
+<section class="tab-panel active" id="tab-character" role="tabpanel">
+<div class="character-ref-layout">
+<div class="section ref-section">
+<div class="section-header"><h2>Character</h2></div>
+<div class="section-body">
+<div class="character-ref-head">
+<div class="mini-wanted-card" aria-label="Wanted poster portrait and bounty"><div class="mini-portrait-frame" id="portraitFrameSmall"><img alt="Small character portrait preview" id="portraitPreviewSmall"/><div class="mini-portrait-placeholder" id="portraitPlaceholderSmall">Portrait</div></div><div class="mini-wanted-bounty"><span class="mini-bounty-label">Bounty</span><span class="mini-bounty-value">฿ <span data-ref="bounty">—</span></span></div></div>
+<div class="ref-grid compact-ref-grid">
+<div class="ref-cell"><span class="ref-label">Name</span><span class="ref-value" data-ref="characterName">—</span></div>
+<div class="ref-cell"><span class="ref-label">Class</span><span class="ref-value" data-ref="className">—</span></div>
+<div class="ref-cell small-ref"><span class="ref-label">Level</span><span class="ref-value" data-ref="level">—</span></div>
+<div class="ref-cell"><span class="ref-label">Subclass</span><span class="ref-value" data-ref="subclass">—</span></div>
+<div class="ref-cell"><span class="ref-label">Species</span><span class="ref-value" data-ref="species">—</span></div>
+<div class="ref-cell"><span class="ref-label">Background</span><span class="ref-value" data-ref="background">—</span></div>
+<div class="ref-cell"><span class="ref-label">Crew Role</span><span class="ref-value" data-ref="role">—</span></div>
+<div class="ref-cell"><span class="ref-label">Bounty</span><span class="ref-value" data-ref="bounty">—</span></div>
+<div class="ref-cell wide-ref"><span class="ref-label">Dream</span><span class="ref-value" data-ref="dream">—</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section ref-section current-only-section">
+<div class="section-header"><h2>Current Trackers</h2></div>
+<div class="section-body">
+<p class="inline-note tight-note">Only the current-value boxes in this tab are editable. Main details stay controlled from their source tabs.</p>
+<div class="current-grid">
+<div class="current-cell" data-tracker-key="hp"><label for="refCurrentHp">HP</label><input data-sync-target="currentHp" id="refCurrentHp" maxlength="4" type="text"/><span class="max-ref">/ <span data-ref="maxHp">—</span></span></div>
+<div class="current-cell" data-tracker-key="tempHp"><label for="refTempHp">Temp</label><input data-sync-target="tempHp" id="refTempHp" maxlength="4" type="text"/></div>
+<div class="current-cell" data-tracker-key="haki"><label for="refHakiCurrent">Haki</label><input data-sync-target="hakiPointsCurrent" id="refHakiCurrent" maxlength="4" type="text"/><span class="max-ref">/ <span data-ref="hakiPointsMax">—</span></span></div>
+<div class="current-cell" data-tracker-key="staminaKi"><label for="refStaminaCurrent">Stamina / Ki</label><input data-sync-target="staminaPointsCurrent" id="refStaminaCurrent" maxlength="4" type="text"/><span class="max-ref">/ <span data-ref="staminaPointsMax">—</span></span></div>
+<div class="current-cell" data-tracker-key="techniques"><label for="refTechniqueCurrent">Techniques</label><input data-sync-target="techniqueUsesCurrent" id="refTechniqueCurrent" maxlength="4" type="text"/><span class="max-ref">/ <span data-ref="techniqueUsesMax">—</span></span></div>
+<div class="current-cell" data-tracker-key="luck"><label for="refLuckCurrent">Luck</label><input data-sync-target="luckPointsCurrent" id="refLuckCurrent" maxlength="4" type="text"/><span class="max-ref">/ <span data-ref="luckPointsMax">—</span></span></div>
+</div>
+</div>
+</div>
+<div class="section ref-section">
+<div class="section-header"><h2>Combat</h2></div>
+<div class="section-body">
+<div class="ref-grid stat-ref-grid">
+<div class="ref-cell small-ref"><span class="ref-label">AC</span><span class="ref-value" data-ref="armorClass">—</span></div>
+<div class="ref-cell small-ref"><span class="ref-label">Init</span><span class="ref-value" data-ref="initiative">—</span></div>
+<div class="ref-cell small-ref"><span class="ref-label">Speed</span><span class="ref-value" data-ref="speed">—</span></div>
+<div class="ref-cell small-ref"><span class="ref-label">Passive</span><span class="ref-value" data-ref="passivePerception">—</span></div>
+<div class="ref-cell small-ref"><span class="ref-label">Prof</span><span class="ref-value" data-ref="profBonus">—</span></div>
+<div class="ref-cell small-ref"><span class="ref-label">Hit Dice</span><span class="ref-value" data-ref="hitDice">—</span></div>
+</div>
+</div>
+</div>
+<div class="section ref-section">
+<div class="section-header"><h2>Abilities</h2></div>
+<div class="section-body">
+<div class="ability-ref-grid">
+<div><strong>STR</strong><span data-ref="strScore">—</span><em data-ref="strTotal">—</em></div>
+<div><strong>DEX</strong><span data-ref="dexScore">—</span><em data-ref="dexTotal">—</em></div>
+<div><strong>CON</strong><span data-ref="conScore">—</span><em data-ref="conTotal">—</em></div>
+<div><strong>INT</strong><span data-ref="intScore">—</span><em data-ref="intTotal">—</em></div>
+<div><strong>WIS</strong><span data-ref="wisScore">—</span><em data-ref="wisTotal">—</em></div>
+<div><strong>CHA</strong><span data-ref="chaScore">—</span><em data-ref="chaTotal">—</em></div>
+</div>
+</div>
+</div>
+<div class="section ref-section">
+<div class="section-header"><h2>Saving Throws</h2></div>
+<div class="section-body">
+<div class="save-ref-grid detailed-save-ref-grid" id="characterSaveReference"></div>
+</div>
+</div>
+<div class="section ref-section">
+<div class="section-header"><h2>Proficient Skills</h2></div>
+<div class="section-body"><div class="skill-ref-grid" id="characterSkillReference"></div></div>
+</div>
+<div class="section ref-section wide-section">
+<div class="section-header"><h2>Attacks &amp; Techniques</h2></div>
+<div class="section-body"><div class="reference-list" id="characterAttackReference"></div></div>
+</div>
+<div class="section ref-section wide-section">
+<div class="section-header"><h2>Features / Powers</h2></div>
+<div class="section-body"><div class="reference-list feature-reference-list" id="characterFeatureReference"></div></div>
+</div>
+</div>
+</section>
+<section class="tab-panel" id="tab-profile" role="tabpanel"><div class="profile-columns"><div class="profile-col profile-left"><div class="section">
+<div class="section-header"><h2>Character Identity</h2></div>
+<div class="section-body">
+<div class="inline-fields">
+<div class="field span-6"><label for="characterName">Character Name</label><input id="characterName" name="characterName" type="text"/></div>
+<div class="field span-3"><label for="playerName">Player</label><input id="playerName" name="playerName" type="text"/></div>
+<div class="field span-3"><label for="campaign">Campaign</label><input id="campaign" name="campaign" type="text"/></div>
+<div class="field span-3"><label for="className">Class</label><input id="className" name="className" placeholder="Any class" type="text"/></div>
+<div class="field span-3"><label for="subclass">Subclass / Archetype</label><input id="subclass" name="subclass" type="text"/></div>
+<div class="field span-2"><label for="level">Level</label><input id="level" max="20" min="1" name="level" type="number"/></div>
+<div class="field span-2"><label for="xp">XP</label><input id="xp" name="xp" type="text"/></div>
+<div class="field span-2"><label for="profBonus">Prof. Bonus</label><input id="profBonus" name="profBonus" placeholder="+2" readonly="" type="text"/></div>
+<div class="field span-3"><label for="species">Species / Race</label><input id="species" name="species" type="text"/></div>
+<div class="field span-3"><label for="background">Background</label><input id="background" name="background" type="text"/></div>
+<div class="field span-3"><label for="alignment">Alignment</label><input id="alignment" name="alignment" type="text"/></div>
+<div class="field span-3"><label for="role">Crew Role</label><input id="role" name="role" placeholder="Captain, cook, doctor..." type="text"/></div>
+<div class="field span-3"><label for="crew">Crew / Faction</label><input id="crew" name="crew" type="text"/></div>
+<div class="field span-3"><label for="bounty">Bounty (฿)</label><input id="bounty" name="bounty" placeholder="฿" type="text"/></div>
+<div class="field span-3"><label for="originSea">Origin Sea</label><select id="originSea" name="originSea"><option></option><option>East Blue</option><option>West Blue</option><option>North Blue</option><option>South Blue</option><option>Grand Line</option><option>New World</option><option>Other</option></select></div>
+<div class="field span-3"><label for="wantedStatus">Wanted Status</label><select id="wantedStatus" name="wantedStatus"><option></option><option>Unknown</option><option>Wanted</option><option>Marine</option><option>Warlord</option><option>Revolutionary</option><option>Yonko Affiliated</option><option>Civilian</option></select></div>
+<div class="field span-12"><label for="dream">Dream / Driving Goal</label><textarea id="dream" name="dream"></textarea></div>
+</div>
+</div>
+</div><div class="section compact-character-extra">
+<div class="section-header"><h2>Training Notes</h2></div>
+<div class="section-body inline-fields">
+<div class="field span-6"><label for="otherProficiencies">Other Proficiencies</label><textarea id="otherProficiencies" name="otherProficiencies" placeholder="Vehicles, kits, special training, custom campaign proficiencies..."></textarea></div>
+<div class="field span-6"><label for="trainingNotes">Training Notes</label><textarea id="trainingNotes" name="trainingNotes" placeholder="Class training, crew duties, special schools, mentors..."></textarea></div>
+</div>
+</div></div><div class="profile-col profile-right"><div class="section">
+<div class="section-header"><h2>Portrait</h2></div>
+<div class="section-body portrait-wrap">
+<div aria-label="Wanted poster portrait" class="portrait-frame" id="portraitFrame"><img alt="Character portrait preview" id="portraitPreview"/><div class="portrait-placeholder" id="portraitPlaceholder">Upload portrait<br/><span>Multiple outfits supported</span></div></div>
+<div class="grid portrait-controls-grid">
+<div class="file-input portrait-manager">
+<div class="portrait-manager-top">
+<div class="field"><label for="portraitInput">Add Portrait Image</label><input accept="image/*" id="portraitInput" type="file"/></div>
+<div class="field"><label for="portraitSlotName">Selected Portrait Name</label><input id="portraitSlotName" placeholder="Default, Desert, Winter, Formal..." type="text"/></div>
+</div>
+<div class="portrait-button-row portrait-arrange-controls">
+<button class="action-btn tiny-action" id="portraitNewBtn" type="button">Add Blank</button>
+<button class="danger-btn tiny-action" id="portraitDeleteBtn" type="button">Delete</button>
+</div>
+<select aria-label="Select active portrait" class="visually-hidden" id="portraitSelect"><option value="">No portrait selected</option></select>
+<div class="portrait-arrange-list" id="portraitList" role="listbox" aria-label="Portrait arrangement list"></div>
+<p class="note">Add portraits for different outfits. Click a portrait to display it on the Character tab. Drag portraits in the list to arrange them.</p>
+<p class="portrait-manager-status" id="portraitStorageStatus">Portrait images are stored separately from the autosave file so large images do not break saving.</p>
+</div>
+<div class="inline-fields">
+<div class="field span-6"><label for="height">Height</label><input id="height" name="height" type="text"/></div>
+<div class="field span-6"><label for="weight">Weight</label><input id="weight" name="weight" type="text"/></div>
+<div class="field span-6"><label for="eyes">Eyes</label><input id="eyes" name="eyes" type="text"/></div>
+<div class="field span-6"><label for="hair">Hair</label><input id="hair" name="hair" type="text"/></div>
+<div class="field span-12"><label for="appearance">Appearance Notes</label><textarea id="appearance" name="appearance"></textarea></div>
+</div>
+</div>
+</div>
+</div></div></div>
+
+
+</section>
+<section class="tab-panel" id="tab-combat" role="tabpanel">
+<div class="combat-top-strip">
+<label class="inspiration-card" for="inspiration"><input id="inspiration" name="inspiration" type="checkbox"/><span class="icon">★</span><span>Inspiration</span></label>
+<div class="ac-formula">Armor Class auto-calculates as 10 + Dexterity modifier + equipment AC bonus - armor penalty. If Unarmoured Defence is checked, it uses 10 + Ability 1 modifier + Ability 2 modifier + equipment AC bonus - armor penalty.</div>
+</div><div class="combat-columns"><div class="combat-col combat-col-left"><div class="section">
+<div class="section-header"><h2>Combat Basics</h2></div>
+<div class="section-body">
+<div class="hp-grid combat-basics-grid">
+<div class="field"><label for="armorClass">Armor Class</label><input class="ac-readonly short-combat-input" id="armorClass" maxlength="4" name="armorClass" readonly="" size="4" title="10 + DEX modifier + equipment AC bonus - armor penalty" type="text"/></div>
+<div class="field"><label for="initiative">Initiative</label><input class="short-combat-input" id="initiative" maxlength="4" name="initiative" size="4" type="text"/></div>
+<div class="field"><label for="speed">Speed</label><input class="short-combat-input" id="speed" maxlength="4" name="speed" size="4" type="text"/></div>
+<div class="field"><label for="passivePerception">Passive Perception</label><input class="short-combat-input" id="passivePerception" maxlength="4" name="passivePerception" size="4" type="text"/></div>
+<div class="field"><label for="maxHp">Max HP</label><input class="short-combat-input" id="maxHp" maxlength="4" name="maxHp" size="4" type="text"/></div>
+<div class="field"><label for="currentHp">Current HP</label><input class="short-combat-input" id="currentHp" maxlength="4" name="currentHp" size="4" type="text"/></div>
+<div class="field"><label for="tempHp">Temp HP</label><input class="short-combat-input" id="tempHp" maxlength="4" name="tempHp" size="4" type="text"/></div>
+<div class="field"><label for="hitDice">Hit Dice</label><input class="short-combat-input" id="hitDice" maxlength="4" name="hitDice" size="4" type="text"/></div>
+</div>
+<div aria-label="Death saving throws" class="death-save-compact">
+<div class="death-title"><span class="death-plus">+</span><span>Death Saves</span></div>
+<div class="death-lines">
+<div class="death-line"><span>Successes</span><input aria-label="Death success 1" id="deathSuccess1" name="deathSuccess1" type="checkbox"/><input aria-label="Death success 2" id="deathSuccess2" name="deathSuccess2" type="checkbox"/><input aria-label="Death success 3" id="deathSuccess3" name="deathSuccess3" type="checkbox"/></div>
+<div class="death-line"><span>Fails</span><input aria-label="Death fail 1" id="deathFail1" name="deathFail1" type="checkbox"/><input aria-label="Death fail 2" id="deathFail2" name="deathFail2" type="checkbox"/><input aria-label="Death fail 3" id="deathFail3" name="deathFail3" type="checkbox"/></div>
+</div>
+</div>
+</div>
+</div><div class="section save-section-combat">
+<div class="section-header"><h2>Saving Throws</h2></div>
+<div class="section-body save-grid save-grid-detailed">
+<div class="save-item save-item-detailed"><input id="saveStrProf" name="saveStrProf" type="checkbox" aria-label="STR saving throw proficiency"/><label for="saveStrProf">STR</label><span class="save-ability-label">Ability</span><input class="save-ability-input" name="saveStrAbility" type="text" readonly aria-label="STR ability modifier"/><span class="save-mod-label">Mod</span><input class="save-misc-input" name="saveStrMisc" type="text" placeholder="+0" aria-label="STR saving throw extra modifier"/><span class="save-total-label">Total</span><input class="save-total-input" name="saveStr" type="text" readonly aria-label="STR saving throw total"/></div>
+<div class="save-item save-item-detailed"><input id="saveDexProf" name="saveDexProf" type="checkbox" aria-label="DEX saving throw proficiency"/><label for="saveDexProf">DEX</label><span class="save-ability-label">Ability</span><input class="save-ability-input" name="saveDexAbility" type="text" readonly aria-label="DEX ability modifier"/><span class="save-mod-label">Mod</span><input class="save-misc-input" name="saveDexMisc" type="text" placeholder="+0" aria-label="DEX saving throw extra modifier"/><span class="save-total-label">Total</span><input class="save-total-input" name="saveDex" type="text" readonly aria-label="DEX saving throw total"/></div>
+<div class="save-item save-item-detailed"><input id="saveConProf" name="saveConProf" type="checkbox" aria-label="CON saving throw proficiency"/><label for="saveConProf">CON</label><span class="save-ability-label">Ability</span><input class="save-ability-input" name="saveConAbility" type="text" readonly aria-label="CON ability modifier"/><span class="save-mod-label">Mod</span><input class="save-misc-input" name="saveConMisc" type="text" placeholder="+0" aria-label="CON saving throw extra modifier"/><span class="save-total-label">Total</span><input class="save-total-input" name="saveCon" type="text" readonly aria-label="CON saving throw total"/></div>
+<div class="save-item save-item-detailed"><input id="saveIntProf" name="saveIntProf" type="checkbox" aria-label="INT saving throw proficiency"/><label for="saveIntProf">INT</label><span class="save-ability-label">Ability</span><input class="save-ability-input" name="saveIntAbility" type="text" readonly aria-label="INT ability modifier"/><span class="save-mod-label">Mod</span><input class="save-misc-input" name="saveIntMisc" type="text" placeholder="+0" aria-label="INT saving throw extra modifier"/><span class="save-total-label">Total</span><input class="save-total-input" name="saveInt" type="text" readonly aria-label="INT saving throw total"/></div>
+<div class="save-item save-item-detailed"><input id="saveWisProf" name="saveWisProf" type="checkbox" aria-label="WIS saving throw proficiency"/><label for="saveWisProf">WIS</label><span class="save-ability-label">Ability</span><input class="save-ability-input" name="saveWisAbility" type="text" readonly aria-label="WIS ability modifier"/><span class="save-mod-label">Mod</span><input class="save-misc-input" name="saveWisMisc" type="text" placeholder="+0" aria-label="WIS saving throw extra modifier"/><span class="save-total-label">Total</span><input class="save-total-input" name="saveWis" type="text" readonly aria-label="WIS saving throw total"/></div>
+<div class="save-item save-item-detailed"><input id="saveChaProf" name="saveChaProf" type="checkbox" aria-label="CHA saving throw proficiency"/><label for="saveChaProf">CHA</label><span class="save-ability-label">Ability</span><input class="save-ability-input" name="saveChaAbility" type="text" readonly aria-label="CHA ability modifier"/><span class="save-mod-label">Mod</span><input class="save-misc-input" name="saveChaMisc" type="text" placeholder="+0" aria-label="CHA saving throw extra modifier"/><span class="save-total-label">Total</span><input class="save-total-input" name="saveCha" type="text" readonly aria-label="CHA saving throw total"/></div>
+</div>
+</div><div class="section">
+<div class="section-header"><h2>Attacks &amp; Techniques</h2><button class="add-btn" data-add="attacks" type="button"><span class="plus">+</span> Add Attack</button></div>
+<div class="section-body"><div class="addable-list" data-list="attacks" id="attacksList"></div></div>
+</div></div><div class="combat-col combat-col-right"><div class="section">
+<div class="section-header"><h2>Resources</h2><button class="add-btn" data-add="resources" type="button"><span class="plus">+</span> Add Resource</button></div>
+<div class="section-body">
+<div class="resource-bar">
+<div class="resource-box" data-tracker-key="haki"><h3>Haki Points</h3><div class="resource-split"><div class="field small"><label for="hakiPointsCurrent">Current</label><input id="hakiPointsCurrent" maxlength="4" name="hakiPointsCurrent" type="text"/></div><div class="field small"><label for="hakiPointsMax">Max</label><input id="hakiPointsMax" maxlength="4" name="hakiPointsMax" type="text"/></div></div></div>
+<div class="resource-box" data-tracker-key="staminaKi"><h3>Stamina / Ki</h3><div class="resource-split"><div class="field small"><label for="staminaPointsCurrent">Current</label><input id="staminaPointsCurrent" maxlength="4" name="staminaPointsCurrent" type="text"/></div><div class="field small"><label for="staminaPointsMax">Max</label><input id="staminaPointsMax" maxlength="4" name="staminaPointsMax" type="text"/></div></div></div>
+<div class="resource-box" data-tracker-key="techniques"><h3>Technique Uses</h3><div class="resource-split"><div class="field small"><label for="techniqueUsesCurrent">Current</label><input id="techniqueUsesCurrent" maxlength="4" name="techniqueUsesCurrent" type="text"/></div><div class="field small"><label for="techniqueUsesMax">Max</label><input id="techniqueUsesMax" maxlength="4" name="techniqueUsesMax" type="text"/></div></div></div>
+<div class="resource-box" data-tracker-key="luck"><h3>Luck / Hero Points</h3><div class="resource-split"><div class="field small"><label for="luckPointsCurrent">Current</label><input id="luckPointsCurrent" maxlength="4" name="luckPointsCurrent" type="text"/></div><div class="field small"><label for="luckPointsMax">Max</label><input id="luckPointsMax" maxlength="4" name="luckPointsMax" type="text"/></div></div></div>
+</div>
+<div style="height:10px"></div>
+<div class="addable-list" data-list="resources" id="resourcesList"></div>
+</div>
+</div><div class="section">
+<div class="section-header"><h2>Haki</h2><button class="add-btn" data-add="haki" type="button"><span class="plus">+</span> Add Haki Ability</button></div>
+<div class="section-body"><div class="addable-list" data-list="haki" id="hakiList"></div></div>
+</div><div class="section">
+<div class="section-header"><h2>Damage Notes &amp; Conditions</h2></div>
+<div class="section-body">
+<div class="inline-fields">
+<div class="field span-4"><label for="resistances">Resistances</label><textarea id="resistances" name="resistances"></textarea></div>
+<div class="field span-4"><label for="immunities">Immunities</label><textarea id="immunities" name="immunities"></textarea></div>
+<div class="field span-4"><label for="conditions">Active Conditions</label><textarea id="conditions" name="conditions"></textarea></div>
+</div>
+</div>
+</div></div></div>
+<div class="section unarmored-section combat-bottom-options">
+<div class="section-header"><h2>Unarmoured Defence Bonus</h2></div>
+<div class="section-body">
+<div class="unarmored-card unarmored-card-bottom">
+<label class="unarmored-toggle" for="unarmoredDefense"><input id="unarmoredDefense" name="unarmoredDefense" type="checkbox"/> Use Unarmoured Defence</label>
+<div class="unarmored-selects">
+<select id="unarmoredAbility1" name="unarmoredAbility1" aria-label="Unarmoured Defence Ability 1"><option value="str">STR</option><option value="dex" selected>DEX</option><option value="con">CON</option><option value="int">INT</option><option value="wis">WIS</option><option value="cha">CHA</option></select>
+<span>+</span>
+<select id="unarmoredAbility2" name="unarmoredAbility2" aria-label="Unarmoured Defence Ability 2"><option value="str">STR</option><option value="dex">DEX</option><option value="con">CON</option><option value="int">INT</option><option value="wis" selected>WIS</option><option value="cha">CHA</option></select>
+<span>= AC Bonus</span>
+</div>
+<p class="note unarmored-note">When checked, Armor Class uses 10 + Ability 1 modifier + Ability 2 modifier + equipment AC bonus - armor penalty. Keep this option at the bottom so the active combat numbers stay first.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="tab-panel" id="tab-abilities" role="tabpanel">
+<div class="grid abilities-layout">
+<div class="section">
+<div class="section-header"><h2>Ability Scores</h2></div>
+<div class="section-body ability-column">
+<div class="ability-row"><span class="ability-name">STR</span><label>Score <input id="strScore" inputmode="numeric" maxlength="2" name="strScore" type="text"/></label><label>Mod <input id="strMod" maxlength="3" name="strMod" readonly="" type="text"/></label><label>Misc <input id="strMisc" inputmode="numeric" maxlength="3" name="strMisc" type="text"/></label><label>Total <input id="strTotal" maxlength="3" name="strTotal" readonly="" type="text"/></label></div>
+<div class="ability-row"><span class="ability-name">DEX</span><label>Score <input id="dexScore" inputmode="numeric" maxlength="2" name="dexScore" type="text"/></label><label>Mod <input id="dexMod" maxlength="3" name="dexMod" readonly="" type="text"/></label><label>Misc <input id="dexMisc" inputmode="numeric" maxlength="3" name="dexMisc" type="text"/></label><label>Total <input id="dexTotal" maxlength="3" name="dexTotal" readonly="" type="text"/></label></div>
+<div class="ability-row"><span class="ability-name">CON</span><label>Score <input id="conScore" inputmode="numeric" maxlength="2" name="conScore" type="text"/></label><label>Mod <input id="conMod" maxlength="3" name="conMod" readonly="" type="text"/></label><label>Misc <input id="conMisc" inputmode="numeric" maxlength="3" name="conMisc" type="text"/></label><label>Total <input id="conTotal" maxlength="3" name="conTotal" readonly="" type="text"/></label></div>
+<div class="ability-row"><span class="ability-name">INT</span><label>Score <input id="intScore" inputmode="numeric" maxlength="2" name="intScore" type="text"/></label><label>Mod <input id="intMod" maxlength="3" name="intMod" readonly="" type="text"/></label><label>Misc <input id="intMisc" inputmode="numeric" maxlength="3" name="intMisc" type="text"/></label><label>Total <input id="intTotal" maxlength="3" name="intTotal" readonly="" type="text"/></label></div>
+<div class="ability-row"><span class="ability-name">WIS</span><label>Score <input id="wisScore" inputmode="numeric" maxlength="2" name="wisScore" type="text"/></label><label>Mod <input id="wisMod" maxlength="3" name="wisMod" readonly="" type="text"/></label><label>Misc <input id="wisMisc" inputmode="numeric" maxlength="3" name="wisMisc" type="text"/></label><label>Total <input id="wisTotal" maxlength="3" name="wisTotal" readonly="" type="text"/></label></div>
+<div class="ability-row"><span class="ability-name">CHA</span><label>Score <input id="chaScore" inputmode="numeric" maxlength="2" name="chaScore" type="text"/></label><label>Mod <input id="chaMod" maxlength="3" name="chaMod" readonly="" type="text"/></label><label>Misc <input id="chaMisc" inputmode="numeric" maxlength="3" name="chaMisc" type="text"/></label><label>Total <input id="chaTotal" maxlength="3" name="chaTotal" readonly="" type="text"/></label></div>
+</div>
+</div>
+<div class="section">
+<div class="section-header"><h2>Skills</h2></div>
+<div class="section-body">
+<table aria-label="Skills table" class="skill-table">
+<thead><tr><th style="width:34px">Prof</th><th>Skill</th><th style="width:46px">Ability</th><th style="width:48px">Bonus</th><th style="width:48px">Total</th><th>Notes</th></tr></thead>
+<tbody id="skillsBody"></tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section class="tab-panel" id="tab-features" role="tabpanel"><div class="features-columns"><div class="feature-col feature-col-1"><div class="section feature-card">
+<div class="section-header"><h2>Class Features</h2><button class="add-btn" data-add="classFeatures" type="button"><span class="plus">+</span> Add Feature</button></div>
+<div class="section-body"><div class="addable-list" data-list="classFeatures" id="classFeaturesList"></div></div>
+</div><div class="section feature-card">
+<div class="section-header"><h2>Feats</h2><button class="add-btn" data-add="feats" type="button"><span class="plus">+</span> Add Feat</button></div>
+<div class="section-body"><div class="addable-list" data-list="feats" id="featsList"></div></div>
+</div></div><div class="feature-col feature-col-2"><div class="section feature-card">
+<div class="section-header"><h2>Species / Background Traits</h2><button class="add-btn" data-add="traits" type="button"><span class="plus">+</span> Add Trait</button></div>
+<div class="section-body"><div class="addable-list" data-list="traits" id="traitsList"></div></div>
+</div><div class="section feature-card">
+<div class="section-header"><h2>Devil Fruit / Power Set</h2><button class="add-btn" data-add="devilFruit" type="button"><span class="plus">+</span> Add Power</button></div>
+<div class="section-body">
+<div class="inline-fields" style="margin-bottom:10px">
+<div class="field span-4"><label for="fruitName">Fruit / Power Name</label><input id="fruitName" name="fruitName" type="text"/></div>
+<div class="field span-4"><label for="fruitType">Type</label><select id="fruitType" name="fruitType"><option></option><option>Paramecia</option><option>Zoan</option><option>Logia</option><option>Mythical Zoan</option><option>Other</option><option>None</option></select></div>
+<div class="field span-4"><label for="fruitWeakness">Primary Weakness</label><input id="fruitWeakness" name="fruitWeakness" type="text"/></div>
+</div>
+<div class="addable-list" data-list="devilFruit" id="devilFruitList"></div>
+</div>
+</div></div><div class="feature-col feature-col-3"><div class="section feature-card">
+<div class="section-header"><h2>Languages</h2><button class="add-btn" data-add="languages" type="button"><span class="plus">+</span> Add Language</button></div>
+<div class="section-body"><div class="addable-list" data-list="languages" id="languagesList"></div></div>
+</div><div class="section feature-card">
+<div class="section-header"><h2>Custom Techniques</h2><button class="add-btn" data-add="customTechniques" type="button"><span class="plus">+</span> Add Technique</button></div>
+<div class="section-body"><div class="addable-list" data-list="customTechniques" id="customTechniquesList"></div></div>
+</div></div></div>
+
+
+
+</section>
+<section class="tab-panel" id="tab-equipment" role="tabpanel">
+<div class="section">
+<div class="section-header"><h2>Equipment</h2><button class="add-btn" data-add="gear" type="button"><span class="plus">+</span> Add Item</button></div>
+<div class="section-body">
+<p class="inline-note">Choose the item type first. Each row only shows the fields that apply. Armor rows feed the automatic AC calculation.</p>
+<div class="addable-list" data-list="gear" id="gearList"></div>
+</div>
+</div>
+<div class="grid two">
+<div class="section">
+<div class="section-header"><h2>Special Items</h2><button class="add-btn" data-add="magicItems" type="button"><span class="plus">+</span> Add Special Item</button></div>
+<div class="section-body"><div class="addable-list" data-list="magicItems" id="magicItemsList"></div></div>
+</div>
+<div class="section">
+<div class="section-header"><h2>Treasure &amp; Supplies</h2><button class="add-btn" data-add="treasure" type="button"><span class="plus">+</span> Add Treasure</button></div>
+<div class="section-body">
+<div class="inline-fields" style="margin-bottom:8px">
+<div class="field span-4"><label for="berry">Berries (฿)</label><input id="berry" name="berry" placeholder="฿" type="text"/></div>
+<div class="field span-8"><label for="supplyNotes">Supply Notes</label><input id="supplyNotes" name="supplyNotes" placeholder="Food, ammo, travel supplies..." type="text"/></div>
+</div>
+<div class="addable-list" data-list="treasure" id="treasureList"></div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header"><h2>Ship, Crew Assets &amp; Contacts</h2><button class="add-btn" data-add="contacts" type="button"><span class="plus">+</span> Add Contact</button></div>
+<div class="section-body inline-fields">
+<div class="field span-4"><label for="shipName">Ship Name</label><input id="shipName" name="shipName" type="text"/></div>
+<div class="field span-4"><label for="shipType">Ship Type</label><input id="shipType" name="shipType" type="text"/></div>
+<div class="field span-4"><label for="shipCondition">Ship Condition</label><input id="shipCondition" name="shipCondition" type="text"/></div>
+<div class="field span-12"><label for="shipNotes">Ship Notes</label><textarea id="shipNotes" name="shipNotes"></textarea></div>
+<div class="span-12"><div class="addable-list" data-list="contacts" id="contactsList"></div></div>
+</div>
+</div>
+</section>
+<section class="tab-panel" id="tab-story" role="tabpanel">
+<div class="grid two">
+<div class="section">
+<div class="section-header"><h2>Personality</h2></div>
+<div class="section-body inline-fields">
+<div class="field span-6"><label for="personalityTraits">Personality Traits</label><textarea id="personalityTraits" name="personalityTraits"></textarea></div>
+<div class="field span-6"><label for="ideals">Ideals</label><textarea id="ideals" name="ideals"></textarea></div>
+<div class="field span-6"><label for="bonds">Bonds</label><textarea id="bonds" name="bonds"></textarea></div>
+<div class="field span-6"><label for="flaws">Flaws</label><textarea id="flaws" name="flaws"></textarea></div>
+</div>
+</div>
+<div class="section">
+<div class="section-header"><h2>Backstory</h2></div>
+<div class="section-body">
+<div class="field"><label for="backstory">Character Backstory</label><textarea id="backstory" name="backstory" style="min-height:298px"></textarea></div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header"><h2>Session Notes</h2><button class="add-btn" data-add="sessionNotes" type="button"><span class="plus">+</span> Add Note</button></div>
+<div class="section-body"><div class="addable-list" data-list="sessionNotes" id="sessionNotesList"></div></div>
+</div>
+</section>
+<section class="tab-panel" id="tab-config" role="tabpanel">
+<div class="section config-section remove-config-section">
+<div class="section-header"><h2>Config: Row Removal</h2></div>
+<div class="section-body compact-config-row">
+<label class="remove-mode-toggle" title="Show or hide row remove buttons"><input id="removeMode" name="removeMode" type="checkbox"/> Toggle Remove</label>
+<p class="inline-note">Turn this on only when you need to delete addable rows. Keeping it off prevents accidental deletion.</p>
+</div>
+</div>
+<div class="section config-section">
+<div class="section-header"><h2>Config: Hide / Show Sections</h2></div>
+<div class="section-body">
+<p class="inline-note">Check a box to hide that section from its tab. Uncheck it to show the section again. Config settings autosave locally.</p>
+<div aria-label="Section visibility controls" class="config-list" id="configVisibilityList"></div>
+</div>
+</div>
+<div class="section config-section">
+<div class="section-header"><h2>Config: Hide / Show Current Trackers</h2></div>
+<div class="section-body">
+<p class="inline-note">Check a box to hide that tracker where it appears. This only changes visibility; saved values remain intact.</p>
+<div aria-label="Current tracker visibility controls" class="config-list tracker-config-list" id="configTrackerList"></div>
+</div>
+</div>
+</section>
+</main>
+<div class="footer-note">Local-only Grand Line pirate log. v28 portrait add/arrange system, bottom Unarmoured Defence option, responsive polish, and stable storage. Use Export for backup. Made by Shintox.</div>
+</div>
+<input accept="application/json" class="hidden-file" id="jsonFile" type="file"/>
+</div>

@@ -1,0 +1,35 @@
+{
+  "id": "one-piece-5e-sheet",
+  "title": "One Piece 5e Pirate Log Sheet",
+  "description": "A custom Foundry VTT v13 character sheet wrapping the One Piece 5e 'Pirate Log' HTML sheet. Registers a sheet you can apply to any Actor of type 'character' from the system you have active. Persists all sheet data, including portraits, to actor flags so it works in a shared (hosted) Foundry game.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13",
+    "maximum": "13"
+  },
+  "authors": [
+    {
+      "name": "Taj Hunter"
+    }
+  ],
+  "esmodules": [
+    "scripts/module.js"
+  ],
+  "scripts": [
+    "scripts/sheet-runtime.js"
+  ],
+  "styles": [
+    "styles/sheet.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "https://github.com/YokyRL/one-piece-5e-sheet",
+  "manifest": "https://github.com/YokyRL/one-piece-5e-sheet/releases/latest/download/module.json",
+  "download": "https://github.com/YokyRL/one-piece-5e-sheet/releases/download/v1.0.0/one-piece-5e-sheet.zip"
+}

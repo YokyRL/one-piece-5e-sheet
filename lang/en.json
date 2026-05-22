@@ -1,0 +1,12 @@
+{
+  "OPFVTT.SheetLabel": "One Piece 5e Pirate Log",
+  "OPFVTT.SettingsCategory": "One Piece 5e Sheet",
+  "OPFVTT.RegisterForTypes": "Actor types to register the sheet for",
+  "OPFVTT.RegisterForTypesHint": "Comma separated list of Actor types in the active system that this sheet should be selectable for (e.g. 'character' or 'character,npc'). After changing this, reload the world.",
+  "OPFVTT.MakeDefault": "Make this the default sheet for those Actor types",
+  "OPFVTT.MakeDefaultHint": "If on, this sheet is set as the default for the configured Actor types. If off, GMs and players pick it manually via the sheet's header button.",
+  "OPFVTT.SaveNow": "Save now",
+  "OPFVTT.Saved": "Saved to actor",
+  "OPFVTT.Imported": "Imported JSON backup",
+  "OPFVTT.Cleared": "Sheet cleared"
+}
