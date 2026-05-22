@@ -30,6 +30,6 @@
     }
   ],
   "url": "https://github.com/YokyRL/one-piece-5e-sheet",
-  "manifest": "https://github.com/YokyRL/one-piece-5e-sheet/releases/latest/download/module.json",
-  "download": "https://github.com/YokyRL/one-piece-5e-sheet/releases/download/v1.0.0/one-piece-5e-sheet.zip"
+  "manifest": "https://raw.githubusercontent.com/YokyRL/one-piece-5e-sheet/main/module.json",
+  "download": "https://github.com/YokyRL/one-piece-5e-sheet/raw/main/dist/one-piece-5e-sheet.zip"
 }
