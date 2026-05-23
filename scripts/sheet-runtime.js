@@ -935,7 +935,9 @@ function _opfvttBoot($root, bridge, scoped){
   load();
   updateAllCalculations();
   syncStickyFromMain();
-  save(false);
+  /* No initial save() in Foundry build — writing on boot causes a re-render
+     loop that detaches our event listeners. We only save in response to
+     user input. */
   /* hash-tab boot disabled in Foundry — each sheet picks its own active tab */
 }
 

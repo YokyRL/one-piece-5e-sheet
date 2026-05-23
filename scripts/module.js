@@ -97,9 +97,9 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
     const bridge = this._buildBridge();
     this._lastBridge = bridge;
 
-    // Boot once per render. Guard against double-boot on re-renders.
-    if (sheetRoot.dataset.opfvttBooted === "1") return;
-    sheetRoot.dataset.opfvttBooted = "1";
+    // Re-boot on every render. Foundry replaces the DOM whenever the actor
+    // updates, so listeners attached to the previous DOM are gone. Booting
+    // again on the fresh DOM is what keeps clicks responsive.
     try {
       globalThis.OPFVTT.boot(sheetRoot, bridge);
     } catch (err) {
@@ -111,7 +111,34 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
   /** Build the storage / UX bridge for the runtime script. */
   _buildBridge() {
     const actor = this.actor;
+    const sheet = this;
     const canWrite = () => actor.isOwner;
+
+    // Update the actor with {render:false} so our own writes don't bounce
+    // the sheet through a re-render that would tear down event listeners.
+    const writeFlag = async (key, value) => {
+      const path = `flags.${MODULE_ID}.${key}`;
+      sheet._skipNextRender = true;
+      try {
+        await actor.update({ [path]: value }, { render: false });
+      } catch (err) {
+        console.warn("[one-piece-5e-sheet] flag write failed:", err);
+      } finally {
+        // Clear the skip flag a tick later, in case Foundry queued a render.
+        setTimeout(() => { sheet._skipNextRender = false; }, 50);
+      }
+    };
+    const unsetFlag = async (key) => {
+      const path = `flags.${MODULE_ID}.-=${key}`;
+      sheet._skipNextRender = true;
+      try {
+        await actor.update({ [path]: null }, { render: false });
+      } catch (err) {
+        console.warn("[one-piece-5e-sheet] flag unset failed:", err);
+      } finally {
+        setTimeout(() => { sheet._skipNextRender = false; }, 50);
+      }
+    };
 
     // Debounce writes so rapid keystrokes don't hammer the server.
     let pendingFlagWrite = null;
@@ -121,11 +148,7 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
       pendingFlagWrite = null;
       pendingFlagValue = null;
       if (v === null || v === undefined) return;
-      try {
-        await actor.setFlag(MODULE_ID, FLAG_SHEET_DATA, v);
-      } catch (err) {
-        console.warn("[one-piece-5e-sheet] setFlag failed:", err);
-      }
+      await writeFlag(FLAG_SHEET_DATA, v);
     };
 
     return {
@@ -138,13 +161,13 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
         if (!canWrite()) return false;
         pendingFlagValue = jsonString;
         if (pendingFlagWrite) clearTimeout(pendingFlagWrite);
-        pendingFlagWrite = setTimeout(flushFlagWrite, 250);
+        pendingFlagWrite = setTimeout(flushFlagWrite, 400);
         return true;
       },
       async clearSheetData() {
         if (!canWrite()) return;
-        try { await actor.unsetFlag(MODULE_ID, FLAG_SHEET_DATA); } catch (e) { console.warn(e); }
-        try { await actor.unsetFlag(MODULE_ID, FLAG_PORTRAITS); } catch (e) { console.warn(e); }
+        await unsetFlag(FLAG_SHEET_DATA);
+        await unsetFlag(FLAG_PORTRAITS);
       },
 
       // --- Portraits (stored as { [id]: dataURL } in a separate flag) ---
@@ -152,8 +175,8 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
         if (!canWrite()) return false;
         const current = foundry.utils.duplicate(actor.getFlag(MODULE_ID, FLAG_PORTRAITS) || {});
         current[id] = src;
-        try { await actor.setFlag(MODULE_ID, FLAG_PORTRAITS, current); return true; }
-        catch (err) { console.warn("[one-piece-5e-sheet] portraitPut failed:", err); return false; }
+        await writeFlag(FLAG_PORTRAITS, current);
+        return true;
       },
       async portraitGet(id) {
         const all = actor.getFlag(MODULE_ID, FLAG_PORTRAITS) || {};
@@ -168,12 +191,12 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
         const all = foundry.utils.duplicate(actor.getFlag(MODULE_ID, FLAG_PORTRAITS) || {});
         if (!(id in all)) return true;
         delete all[id];
-        try { await actor.setFlag(MODULE_ID, FLAG_PORTRAITS, all); return true; }
-        catch (err) { console.warn("[one-piece-5e-sheet] portraitDelete failed:", err); return false; }
+        await writeFlag(FLAG_PORTRAITS, all);
+        return true;
       },
       async portraitClear() {
         if (!canWrite()) return;
-        try { await actor.unsetFlag(MODULE_ID, FLAG_PORTRAITS); } catch (e) { console.warn(e); }
+        await unsetFlag(FLAG_PORTRAITS);
       },
 
       // --- UX helpers ---
@@ -182,6 +205,19 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
       },
       onClose: () => flushFlagWrite()
     };
+  }
+
+  /** @inheritdoc
+   *  Skip Foundry-triggered re-renders that originated from our own flag
+   *  writes, even though we already pass {render:false}. This is belt-and-
+   *  braces: a re-render mid-edit would wipe focus and any in-flight
+   *  selection state.
+   */
+  async _render(force, options) {
+    if (this._skipNextRender && !force) {
+      return;
+    }
+    return super._render(force, options);
   }
 
   /** @inheritdoc */
