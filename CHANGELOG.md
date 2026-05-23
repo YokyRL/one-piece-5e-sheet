@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.2 — 2026-05-22
+
+### Fixed
+
+- **Nothing on the sheet was clickable in actual Foundry** (Save, Export,
+  Import, Print, Clear, tab switches, Add Row, even text inputs were all
+  inert). Foundry v13's classic ActorSheet calls `_disableFields(form)`
+  on every render and stamps `disabled` on every form control whenever
+  `isEditable` is false. The base `isEditable` getter is strict and could
+  return false even for the actor's owner in certain edit-mode states.
+- Overrode `isEditable` to be true for GMs and any actor owner.
+- Overrode `_disableFields` to be a no-op — the bridge already gates
+  persistence by ownership, so the form being interactive doesn't leak
+  writes.
+- Belt-and-braces: `activateListeners` now strips any lingering
+  `disabled` / `readonly` / `inert` attributes from the sheet root and its
+  ancestors after every render.
+
 ## 1.0.1 — 2026-05-22
 
 ### Fixed

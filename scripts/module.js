@@ -49,6 +49,33 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
     });
   }
 
+  /** @inheritdoc
+   *  We manage our own write-permission gating in the bridge — the parent
+   *  class' default "is the form editable?" check is too restrictive in
+   *  v13: it returns false unless Foundry considers the document edit-able
+   *  for this user via a strict ownership check, which makes Foundry call
+   *  _disableFields(form) and slap `disabled` on every input and button.
+   *  Result: nothing on the sheet is clickable. Allow editing for the
+   *  owner or the GM and let the bridge silently no-op writes for anyone
+   *  who shouldn't actually be writing.
+   */
+  get isEditable() {
+    if (game.user?.isGM) return true;
+    return !!this.actor?.isOwner;
+  }
+
+  /** @inheritdoc
+   *  Disable Foundry's automatic field-disabling pass. The base class walks
+   *  the form on every render and adds `disabled` to every input, select,
+   *  textarea, and button when `isEditable` is false. We don't want that —
+   *  the sheet's own buttons (Save, Export, Import, Print, Clear, tab
+   *  switches, Add Row) must always be clickable, and the bridge already
+   *  no-ops persistence for non-owners.
+   */
+  _disableFields(form) {
+    // Intentionally a no-op. See note above.
+  }
+
   /** @inheritdoc */
   get title() {
     const base = this.actor?.name || game.i18n.localize("OPFVTT.SheetLabel");
@@ -87,6 +114,21 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
       sheetRoot.querySelectorAll("[id]").forEach(el => {
         if (!el.dataset.origId) el.dataset.origId = el.id;
       });
+    }
+
+    // Defensive cleanup: strip any disabled / readonly / inert attributes
+    // that Foundry or other modules may have stamped on our form before our
+    // overrides took effect. The bridge already gates writes by ownership;
+    // these attributes break the sheet's own UI buttons.
+    sheetRoot.querySelectorAll("[disabled]").forEach(el => el.removeAttribute("disabled"));
+    sheetRoot.querySelectorAll("[readonly]").forEach(el => el.removeAttribute("readonly"));
+    sheetRoot.querySelectorAll("[inert]").forEach(el => el.removeAttribute("inert"));
+    // Also remove inert from any ancestor (form / window-content) up to the app window.
+    let p = sheetRoot.parentElement;
+    while (p && !p.classList.contains("window-app")) {
+      if (p.hasAttribute("inert")) p.removeAttribute("inert");
+      if (p.hasAttribute("disabled")) p.removeAttribute("disabled");
+      p = p.parentElement;
     }
 
     if (!globalThis.OPFVTT?.boot) {
