@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.3 — 2026-05-22
+
+### Fixed
+
+- Sheet was still inert after v1.0.2 because `activateListeners` could not
+  locate the `.opfvtt-sheet` root inside the element Foundry handed it.
+  Console showed `Sheet root not found in rendered template` on every
+  render, so the runtime that wires up all clicks never booted.
+- Root lookup is now resilient: it accepts the passed element directly,
+  searches descendants, walks up to the window container, falls back to
+  `this.element`, and finally does an actor-id-scoped document query as a
+  last resort. The runtime now boots regardless of which exact element
+  Foundry v13 passes into `activateListeners`.
+
 ## 1.0.2 — 2026-05-22
 
 ### Fixed

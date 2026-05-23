@@ -95,10 +95,50 @@ class OnePiece5eSheet extends (resolveActorSheetBase()) {
 
     // jQuery in classic ActorSheet — unwrap.
     const rootEl = (html instanceof HTMLElement) ? html : (html[0] || html.get?.(0));
-    if (!rootEl) return;
-    const sheetRoot = rootEl.querySelector(".opfvtt-sheet");
+    if (!rootEl) {
+      console.warn("[one-piece-5e-sheet] activateListeners called with no root element.");
+      return;
+    }
+
+    // Locate the sheet root. It may be:
+    //  - rootEl itself (if Foundry passed us the form whose first child IS
+    //    our wrapper, or passed us the wrapper directly),
+    //  - a descendant of rootEl (normal case for classic v1 sheets where html
+    //    is the form element),
+    //  - or, in v13 ApplicationV2-like setups, attached elsewhere in the
+    //    same window — so fall back to the window-app container, then the
+    //    document, before giving up.
+    let sheetRoot = null;
+    if (rootEl.classList?.contains("opfvtt-sheet")) {
+      sheetRoot = rootEl;
+    } else if (rootEl.querySelector) {
+      sheetRoot = rootEl.querySelector(".opfvtt-sheet");
+    }
     if (!sheetRoot) {
-      console.warn("[one-piece-5e-sheet] Sheet root not found in rendered template.");
+      // Walk up to the window-app and search downward.
+      let p = rootEl.parentElement;
+      while (p && !p.classList?.contains("window-app")) p = p.parentElement;
+      if (p) sheetRoot = p.querySelector(".opfvtt-sheet");
+    }
+    if (!sheetRoot && this.element) {
+      // Foundry stores the live root on this.element (jQuery in v1, HTMLElement in v13).
+      const liveEl = (this.element instanceof HTMLElement) ? this.element : (this.element[0] || this.element.get?.(0));
+      if (liveEl) {
+        if (liveEl.classList?.contains("opfvtt-sheet")) sheetRoot = liveEl;
+        else sheetRoot = liveEl.querySelector?.(".opfvtt-sheet") || null;
+      }
+    }
+    if (!sheetRoot) {
+      // Last resort: actor-id-scoped global lookup. Multiple sheets for
+      // different actors won't collide because we tag with data-actor-id.
+      const actorId = this.actor?.id;
+      if (actorId) {
+        sheetRoot = document.querySelector(`.opfvtt-sheet[data-actor-id="${actorId}"]`);
+      }
+    }
+    if (!sheetRoot) {
+      console.warn("[one-piece-5e-sheet] Sheet root not found in rendered template.",
+                   { rootElTag: rootEl.tagName, rootElClass: rootEl.className });
       return;
     }
 
